@@ -1,10 +1,20 @@
-(define (twenty-one strategy)
+#lang simply-scheme
+
 ; 1. Make best-total
-    (define (best-total hand)
-        (cond ((empty? hand) 0)
-        ((member? (butlast (first hand)) '(a j q k)) ??? )
-        (else (+ (butlast (first hand)) (best-total (butfirst hand))))))
-    
+(define (best-total hand)
+    (define (make-sen hand )
+        (cond ((empty? hand) '())
+          ((member? (butlast (first hand)) '(j q k)) (sentence  (sentence 10 (best-total (butfirst hand)))))
+          ((equal? 'a (butlast (first hand))) (sentence  (sentence 1 (best-total (butfirst hand))) ))
+          (else (sentence  (sentence (butlast (first hand)) (best-total (butfirst hand)))))))
+    (make-sen hand)
+)
+
+
+(best-total '(5s 3d 6h as))
+(best-total '(5f kh ad qs))
+
+(define (twenty-one strategy)
   (define (play-dealer customer-hand dealer-hand-so-far rest-of-deck)
     (cond ((> (best-total dealer-hand-so-far) 21) 1)
 	  ((< (best-total dealer-hand-so-far) 17)
