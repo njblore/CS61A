@@ -23,5 +23,20 @@
 
 ; Exercise 1.37
 
-(define (cont-frac n d k)
-    )
+;;; (define (cont-frac n d k)
+;;;     )
+
+; 2: Write a procedure (next-perf n) that tests numbers starting with n and continuing with n+1, n+2, etc. until a perfect number is 
+; found. Then find the next perfect number after 28.
+
+(define (sum-of-factors n x)
+  (cond ((= x n) 0)
+        ((= 0 (remainder n x)) (+ x (sum-of-factors n (+ 1 x))))
+        (else (+ 0 (sum-of-factors n (+ 1 x))))))
+
+(define (next-perf n)
+  (if (= n (sum-of-factors n 1)) n 
+  (next-perf (+ 1 n))))
+
+(next-perf 29) ; = 496, correct!
+
