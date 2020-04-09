@@ -40,3 +40,39 @@
 
 (next-perf 29) ; = 496, correct!
 
+; Explain the effect of interchanging the order in which the base cases in the cc procedure are checked
+
+; ANSWER: When (or (< amount 0) (= kinds-of-coins 0)) is checked first, in a case where the amount is 0 AND the kinds of coins is zero, this
+; wouldn't be counted as a 'way to make change', it would be added as a fail (0) even though it did make change (get to exactly 0).
+
+(define (count-change amount)
+  (cc amount 5))
+(define (cc amount kinds-of-coins)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (= kinds-of-coins 0)) 0)
+        (else (+ (cc amount (- kinds-of-coins 1))
+                 (cc (- amount (first-denomination kinds-of-coins)) kinds-of-coins)))))
+(define (first-denomination kinds-of-coins)
+  (cond ((= kinds-of-coins 1) 1)
+        ((= kinds-of-coins 2) 5)
+        ((= kinds-of-coins 3) 10)
+        ((= kinds-of-coins 4) 25)
+        ((= kinds-of-coins 5) 50)))
+
+
+; Give an algebraic formula relating the values of the parameters b, n, counter, and product of the expt and exp-iter procedures
+
+; ANSWER: As n decreases by one, product is multiplied by b while b stays constant until n reaches 0.
+(define (expt b n)
+  (expt-iter b n 1))
+
+(define (expt-iter b counter product)
+  (if (= counter 0)
+      product
+      (expt-iter b
+                (- counter 1)
+                (* b product))))
+
+
+
+
