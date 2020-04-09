@@ -2,17 +2,30 @@
 
 ; 1. Make best-total
 (define (best-total hand)
-    (define (make-sen hand )
-        (cond ((empty? hand) '())
-          ((member? (butlast (first hand)) '(j q k)) (sentence  (sentence 10 (best-total (butfirst hand)))))
-          ((equal? 'a (butlast (first hand))) (sentence  (sentence 1 (best-total (butfirst hand))) ))
-          (else (sentence  (sentence (butlast (first hand)) (best-total (butfirst hand)))))))
-    (make-sen hand)
+
+    (define (min-total hand)
+        (cond ((empty? hand) 0)
+          ((member? (butlast (first hand)) '(j q k)) (+ 10 (min-total (butfirst hand))))
+          ((equal? 'a (butlast (first hand))) (+ 1 (min-total (butfirst hand))))
+          (else (+ (butlast (first hand)) (min-total (butfirst hand))))))
+
+	(define (ace-count hand)
+		(cond ((empty? hand) 0)
+			  ((equal? (butlast (first hand)) 'a) (+ 1 (ace-count (butfirst hand))))
+			  (else (+ 0 (ace-count (butfirst hand))))))
+
+	(define (get-values total count)
+		(if (= 0 count) total
+		(get-values (try-add-ten total) (- count 1))))
+	
+	(define (try-add-ten value)
+		(if (> 22 (+ 10 value)) (+ 10 value)
+		value))
+
+	(get-values (min-total hand) (ace-count hand))
 )
 
-
-(best-total '(5s 3d 6h as))
-(best-total '(5f kh ad qs))
+(best-total '(5f 2h ad))
 
 (define (twenty-one strategy)
   (define (play-dealer customer-hand dealer-hand-so-far rest-of-deck)
