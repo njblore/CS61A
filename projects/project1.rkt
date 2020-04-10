@@ -76,12 +76,12 @@
 	(cond ((= n 0) 0)
 	(else (+ (twenty-one strategy) (play-n strategy (- n 1))))))
 
-; 4. Define a strategy named dealer-sensitive that takes a card if the dealer has an ace, 7, 8, 9, 10, or picture card showing, 
-; AND the customer has less than 17. 
+; 4. Define a strategy named dealer-sensitive that takes a card if the dealer has an ace, 7, 8, 9, 10, 
+; or picture card showing, AND the customer has less than 17. 
 ; OR the dealer has a 2, 3, 4, 5, or 6 showing, and the customer has less than 12.
 
 (define (dealer-sensitive hand-so-far dealer-up-card)
-	(or (and (member? (butlast dealer-up-card) '(A 7 8 9 10)) (< (best-total hand-so-far) 17)) 
+	(or (and (member? (butlast dealer-up-card) '(A 7 8 9 10 Q K J)) (< (best-total hand-so-far) 17)) 
 		(and (member? (butlast dealer-up-card) '(2 3 4 5 6)) (< (best-total hand-so-far) 12))))
 
 
@@ -128,8 +128,13 @@
 					  ((equal? (first-strategy x) (third-strategy x)) (first-strategy x))
 					  (else (second-strategy x)))))
 
-((majority (stop-at 19) (stop-at 17) (stop-at 18))'(8h Kd))
-
-; 9. Write a procedure reckless thattakes a strategy as its argument and returns another strategy. 
+; 9. Write a procedure reckless that takes a strategy as its argument and returns another strategy. 
 ; This new strategy should take one more card than the original would
+
+(define (reckless strategy)
+	(define (hit? hand) (strategy hand))
+	(lambda (x) (or (hit? x) (hit? (butlast x)))))
+
+((reckless (stop-at 17))'(Kh 6d 4h))
+
 
